@@ -1,117 +1,154 @@
 <template>
   <div class="home">
-    <nav>
+    <!-- 每个组件有且只有根元素 -->
+    <!-- 这是导航 -->
+    <div class="nav">
+      <!-- 使用布局容器 -->
+      <!-- 将z-container设置为flex容器 -->
       <div class="z-container">
-        <div>
+        <!-- 设置左右俩端对齐 使用要设置俩个div 一个放左边的一个放右边的 -->
+        <div class="left">
+          <!-- 使用@/ 指向src目录 -->
           <img src="@/assets/logo.png" alt />
           <a href="#">社会招聘</a>
           <a href="#">校园招聘</a>
           <a href="#">关于大疆</a>
         </div>
-        <div>
-          <a href="#">登录</a>
+        <div class="right">
+          <!-- 使用router的 router-link 进行跳转 -->
+          <!-- <a href="/login">登录</a> -->
+          <router-link to="/login">登录</router-link>
         </div>
       </div>
-    </nav>
+    </div>
+    <!-- 这是内容 -->
     <div class="main">
-      <div>
-        <p>未来无所不能</p>
+      <div class="title">
+        <p>未 来 无 所 不 能</p>
         <p>THE FUTURE OF POSSIBLE</p>
       </div>
     </div>
-    <footer>
+    <!-- 这是足部 -->
+    <div class="footer" id="footer">
+      <!-- 使用布局容器 -->
+      <!-- 将z-container设置为flex容器 -->
       <div class="z-container">
-        <p>Copyright © 2019 zzz zzz创新 版权所有</p>
-        <a href="#">zzz官网 |</a>
-        <a href="#">zzz赞助 |</a>
-        <a href="#">淘宝阿里 |</a>
-        <a href="#">腾讯云 |</a>
-        <a href="#">微信公众号</a>
+        <!-- 设置左右俩端对齐 使用要设置俩个div 一个放左边的一个放右边的 -->
+        <div class="left">
+          <!-- 使用@/ 指向src目录 -->
+          <p>Copyright © 2019 DJI 大疆创新 版权所有</p>
+          <a href="#">DJI 大疆创新官网 |</a>
+          <a href="#">DJI 大疆创新官方商城 |</a>
+          <a href="#">天空之城 |</a>
+          <a href="#">RoboMaster |</a>
+          <a href="#">DJI 大疆招聘公众号</a>
+        </div>
+        <div class="right">
+          <a href="#">简体中文 |</a>
+          <a href="#">English</a>
+        </div>
       </div>
-    </footer>
+    </div>
   </div>
 </template>
-
 <script>
-export default {
-  name: "home"
-};
+export default {};
 </script>
-
 <style lang="scss" scoped>
+// 设置.home容器高度占满全屏
 .home {
   height: 100%;
-  nav {
-    position: absolute;
-    top: 0;
-    left: 0;
+  background: #fff;
+  .nav{
+    position: fixed; //固定
     width: 100%;
+    left: 0;
+    top: 0;
+    right: 0;
+  }
+  .nav,
+  .footer {
+    //.home .nav
     height: 60px;
     background: #fff;
     .z-container {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
+      //.home .nav .z-contianer
       height: 100%;
-      div {
+      display: flex;
+      // 设置flex容器的排序方式 水平还是垂直  主轴是水平 x
+      justify-content: space-between; // 俩端对齐 中间内容平分
+      // 设置垂直方向排列
+      align-items: center; // 居中显示
+      //flex布局的排列只对子元素有效
+      .left {
+        // 设置left 为flex容器
         display: flex;
+        // 设置垂直方向居中
         align-items: center;
         img {
           width: 34px;
           height: 34px;
-          margin-right: 50px;
+          margin-right: 56px;
           cursor: pointer;
         }
-        a {
-          color: #3b3e40;
-          font-size: 14px;
-          margin-right: 34px;
-        }
-        a:hover {
-          color: #44a8f2;
-        }
+      }
+      a {
+        color: #232526;
+        font-size: 14px;
+        margin-right: 30px;
+      }
+      a:last-child {
+        margin-right: 0px;
+      }
+      // 添加鼠标悬浮改变颜色
+      a:hover {
+        color: #44a8f2;
       }
     }
   }
   .main {
+    // 设置高度默认占满全屏
     height: 100%;
+    // 设置图片居中
     background-size: cover;
+    // 设置图片偏移 保证宽度改变 图片都能居中显示
     background-position: 50%;
-    background-image: url(https://we2.djicdn.com/hire/public/img/home-page-banner-2.d8f1ba7.png);
-    font-size: 33px;
-    color: #fff;
-    line-height: 1.5;
-    text-align: center;
-    margin-bottom: -50px;
     padding-top: 60px;
     padding-bottom: 50px;
+    margin-bottom: -50px;
+    // 这些边距会 增加div的宽高
+    // 设置忽略边距
     box-sizing: border-box;
-    div{
-      padding-top: 200px;
+    background-image: url(https://we2.djicdn.com/hire/public/img/home-page-banner-2.d8f1ba7.png);
+    .title{ // .main .title
+      // 设置字体居中显示
+      text-align: center;
+      padding-top: 220px;
+      color: #fff;
+      font-size: 34px;
+      line-height: 1.5;
+      p:first-child{
+        // 设置字体间隔
+        letter-spacing:2px; 
+      }
+      p:last-child{
+        font-size: 22px;
+      }
     }
   }
-  footer {
-    background: #fff;
-    position: relative;
-    width: 100%;
-    bottom: 0;
-    left: 0;
+  // 设置底部样式
+  #footer {
     height: 50px;
-    .z-container {
-      height: 100%;
-      display: flex;
-      align-items: center;
+    color: #707473;
+    p {
       font-size: 12px;
-      color: #979797;
-      p {
-        margin-right: 34px;
-      }
-      a {
-        color: #979797;
-        margin-right: 4px;
-        font-size: 13px;
-      }
+      margin-right: 26px;
+    }
+    a {
+      font-size: 12px;
+      margin-right: 4px;
+      // a标签无法继承父类的颜色
+      color: #707473;
     }
   }
 }

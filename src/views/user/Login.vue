@@ -64,7 +64,23 @@ export default {
   methods: {
     login() {
       //   使用路由进行跳转
-      this.$router.push("/");
+      // this.$router.push("/");
+      // 发送post请求
+      // this.$api.get()
+      // http://172.16.14.44:3000/   userName 用户名 passwrod 密码
+      this.$api
+        .post("http://172.16.14.44:3000/users/login", {
+          userName: this.val1,
+          password: this.val2
+        })
+        .then(res => {
+          if (res.data.code === 0) {
+            alert("登录成功");
+          } else {
+            alert(res.data.msg);
+          }
+          // console.log(res.data);
+        });
     }
   }
 };
