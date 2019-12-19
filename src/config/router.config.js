@@ -3,8 +3,19 @@ import Home from '../views/Home.vue'
 // ctrl + p 快速搜索文件
 const routes = [{
     path: '/',
-    name: 'home',
-    component: Home
+    component: Home,
+    children: [{
+        path: '',
+        name: 'home',
+        component: () => import('@/views/main/Main')
+      },
+      // 增加一个新的页面 并导入
+      {
+        path: '/social',
+        name: 'social',
+        component: () => import('@/views/main/Social')
+      }
+    ]
   },
   { //配置嵌套路由
     path: '/login',

@@ -34,21 +34,21 @@ export default {
   methods: {
     reg() {
       // 先判断文本框是否有内容
-      if (!this.val1) {
-        // 使用el提供的友好提示
-        this.$message.error({
-          message: "用户名或手机号不能为空",
-          duration: 1000
-        });
-        return;
-      }
-      if (!this.val2) {
-        this.$message.error({
-          message: "密码不能为空哦",
-          duration: 1000
-        });
-        return;
-      }
+      // if (!this.val1) {
+      //   // 使用el提供的友好提示
+      //   this.$message.error({
+      //     message: "用户名或手机号不能为空",
+      //     duration: 1000
+      //   });
+      //   return;
+      // }
+      // if (!this.val2) {
+      //   this.$message.error({
+      //     message: "密码不能为空哦",
+      //     duration: 1000
+      //   });
+      //   return;
+      // }
       // 注册
       this.$api
         .post("users/reg", { userName: this.val1, password: this.val2 })
