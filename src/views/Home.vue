@@ -17,7 +17,18 @@
         <div class="right">
           <!-- 使用router的 router-link 进行跳转 -->
           <!-- <a href="/login">登录</a> -->
-          <router-link to="/login">登录</router-link>
+
+          <router-link to="/login" v-if="!userName">登录</router-link>
+          <!-- 去除a标签的默认行为 -->
+          <!-- <a href="#" @click.prevent v-else>欢迎您, {{userName}}</a> -->
+          <el-dropdown v-else>
+            <span style="cursor: pointer;">欢迎您, {{userName}}</span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>个人中心</el-dropdown-item>
+              <el-dropdown-item>个人空间</el-dropdown-item>
+              <el-dropdown-item>退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
       </div>
     </div>
@@ -52,14 +63,62 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  name: "home",
+  data() {
+    return {
+      userInfo: {}
+    };
+  },
+  // 生命周期函数
+  mounted() {
+    this.fetchUserInfo();
+  },
+  // 计算属性
+  computed: {
+    userName() {
+      // 计算用户的用户名
+      // 判断用户是否为空
+      // JSON.stringify 判断对象为空
+      // 直接遍历对象
+      // 使用es6的keys判断这个对象的属性的长度是否有
+      if (Object.keys(this.userInfo).length) {
+        return this.userInfo.username;
+      }
+      return "";
+    }
+  },
+  methods: {
+    //获取用户信息
+    // 为什么明明登录成功了 还是显示没有登录？
+    // 在前后端分离的过程中 由于浏览器的限制 每次传递的session值都是不一样的
+    // 于是后端无法判断是否为同一个用户 所以就会造成session无效
+    // 解决办法 ： 在每次发送ajax的时候 手动传递session值
+    fetchUserInfo() {
+      this.$api.get("users/userInfo").then(res => {
+        let data = res.data;
+        // 判断状态码
+        if (data.code === 0) {
+          console.log("服务器返回的值", data.data);
+          // 将用户信息保存到data中
+          this.userInfo = data.data;
+        } else {
+          this.$message.error({
+            message: data.msg,
+            duration: 1000
+          });
+        }
+      });
+    }
+  }
+};
 </script>
 <style lang="scss" scoped>
 // 设置.home容器高度占满全屏
 .home {
   height: 100%;
   background: #fff;
-  .nav{
+  .nav {
     position: fixed; //固定
     width: 100%;
     left: 0;
@@ -120,18 +179,19 @@ export default {};
     // 设置忽略边距
     box-sizing: border-box;
     background-image: url(https://we2.djicdn.com/hire/public/img/home-page-banner-2.d8f1ba7.png);
-    .title{ // .main .title
+    .title {
+      // .main .title
       // 设置字体居中显示
       text-align: center;
       padding-top: 220px;
       color: #fff;
       font-size: 34px;
       line-height: 1.5;
-      p:first-child{
+      p:first-child {
         // 设置字体间隔
-        letter-spacing:2px; 
+        letter-spacing: 2px;
       }
-      p:last-child{
+      p:last-child {
         font-size: 22px;
       }
     }
