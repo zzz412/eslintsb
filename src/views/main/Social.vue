@@ -8,19 +8,25 @@
         <div class="classNav">
           <div class="nav">
             <div>职位类别:</div>
-            <div class="active">所有类别</div>
+            <div :class="{active:keywords.type===0}" @click="serachJobs(0)">所有类别</div>
             <!-- 使用列表渲染 渲染所有的类别 -->
-            <div v-for="item in typeList" :key="item.id">{{item.type}}</div>
+            <!-- 添加点击事件 -->
+            <div
+              v-for="item in typeList"
+              :class="{active:keywords.type===item.id}"
+              @click="serachJobs(item.id)"
+              :key="item.id"
+            >{{item.type}}</div>
           </div>
           <div class="nav">
             <div>工作城市:</div>
-            <div class="active">所有城市</div>
-            <div>上海市</div>
-            <div>北京市</div>
-            <div>广州市</div>
-            <div>深圳</div>
-            <div>长沙市</div>
-            <div>武汉市</div>
+            <div :class="{active:keywords.city===0}" @click="serachCitys(0)">所有城市</div>
+            <div
+              @click="serachCitys(item.id)"
+              v-for="item in cityList"
+              :key="item.id"
+              :class="{active:keywords.city===item.id}"
+            >{{item.city}}</div>
           </div>
         </div>
         <!-- 这是搜索区域 -->
@@ -32,16 +38,17 @@
             size="small"
             v-model="query"
             clearable
+            @change="serachList"
           />
           <div class="keyword">
-            <span>实习生</span>
-            <span>前端</span>
-            <span>Java</span>
-            <span>开发</span>
-            <span>会计</span>
-            <span>扫地</span>
-            <span>IOS</span>
-            <span>算法</span>
+            <span @click="serachList('实习生')">实习生</span>
+            <span @click="serachList('前端')">前端</span>
+            <span @click="serachList('Java')">Java</span>
+            <span @click="serachList('开发')">开发</span>
+            <span @click="serachList('会计')">会计</span>
+            <span @click="serachList('扫地')">扫地</span>
+            <span @click="serachList('IOS')">IOS</span>
+            <span @click="serachList('算法')">算法</span>
           </div>
         </div>
         <!-- 这是结果区域 -->
@@ -79,7 +86,7 @@
             background
             layout="prev, pager, next"
             :total="pagination.total"
-            :current-page="pagination.page-0"
+            :current-page="pagination.page"
             @current-change="pageChange"
             class="mypage"
           />
@@ -96,12 +103,25 @@ export default {
     return {
       //职位类别
       typeList: [],
+      //城市类别
+      cityList: [
+        { id: 1, city: "上海市" },
+        { id: 2, city: "长沙市" },
+        { id: 3, city: "武汉市" },
+        { id: 4, city: "北京市" },
+        { id: 5, city: "广州市" },
+        { id: 6, city: "深圳市" }
+      ],
       //搜索框的值
       query: "",
       // 职位列表
       jobs: [],
       // 分页器
-      pagination: {}
+      pagination: {},
+      keywords: {
+        type: 0,
+        city: 0
+      }
     };
   },
   //页面渲染完毕调用接口
@@ -129,16 +149,38 @@ export default {
     },
     // 获取职位列表
     fetchJobs() {
+      // 默认传递页码
+      let params = {
+        page: this.pagination.page || 1
+      };
+      // 如果有筛选职位类别就传递
+      if (this.keywords.type) {
+        params.jobType = this.keywords.type;
+      }
+      // 如果有筛选城市就传递
+      if (this.keywords.city) {
+        // this.keywords.city 是id值  不能直接进行查询 要过滤一遍 变成城市名
+        var city = this.cityList.find(item => item.id === this.keywords.city)
+          .city;
+        params.jobCity = city;
+      }
+      // 如果文本框有值
+      if (this.query) {
+        params.jobName = this.query;
+      }
+
       // axios的get传参
       this.$api
-        .get("job/lists", { params: { page: this.pagination.page || 1 } })
+        .get("job/lists", {
+          params
+        })
         .then(res => {
           let {
             data: { items, total, page }
           } = res.data;
-          console.log(items);
-          console.log(total);
-          console.log(page);
+          // console.log(items);
+          // console.log(total);
+          // console.log(page);
           this.jobs = items;
           //定制分页器
           this.pagination = {
@@ -160,8 +202,22 @@ export default {
       // 将typelist的类型与val进行匹配
       var item = this.typeList.find(item => item.id == val);
       return item.type;
-    }
-  }
+    },
+    serachJobs(id) {
+      this.keywords.type = id;
+      this.fetchJobs();
+    },
+    serachCitys(id) {
+      this.keywords.city = id;
+      this.fetchJobs();
+    },
+    // 输入框回车或者失焦事件
+    serachList(value) {
+      // 重新查询
+      this.query = value;
+      this.fetchJobs();
+    },
+  },
 };
 </script>
 
