@@ -6,8 +6,9 @@
       <!-- 设置左右俩端对齐 使用要设置俩个div 一个放左边的一个放右边的 -->
       <div class="left">
         <!-- 使用@/ 指向src目录 -->
+        <!-- 做一个图片链接  为了不受其他样式影响 直接使用tag 渲染成其他标签-->
         <router-link to="/" tag="span">
-          <img src="@/assets/logo.png" alt/>
+          <img src="@/assets/logo.png" alt />
         </router-link>
         <router-link to="/social">社会招聘</router-link>
         <a href="#">校园招聘</a>
@@ -91,6 +92,7 @@ export default {
   left: 0;
   top: 0;
   right: 0;
+  z-index: 999;
 }
 .nav,
 .footer {
