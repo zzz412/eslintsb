@@ -23,7 +23,7 @@
         <el-dropdown v-else>
           <span style="cursor: pointer;">欢迎您, {{userName}}</span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>个人中心</el-dropdown-item>
+            <el-dropdown-item @click.native="test">个人中心</el-dropdown-item>
             <el-dropdown-item>个人空间</el-dropdown-item>
             <el-dropdown-item>退出登录</el-dropdown-item>
           </el-dropdown-menu>
@@ -66,19 +66,27 @@ export default {
     // 于是后端无法判断是否为同一个用户 所以就会造成session无效
     // 解决办法 ： 在每次发送ajax的时候 手动传递session值
     fetchUserInfo() {
-      this.$api.get("users/userInfo").then(res => {
-        let data = res.data;
-        // 判断状态码
-        if (data.code === 0) {
-          console.log("服务器返回的值", data.data);
-          // 将用户信息保存到data中
-          this.userInfo = data.data;
-        } else {
-          this.$message.error({
-            message: data.msg,
-            duration: 1000
-          });
-        }
+      // this.$api.get("users/userInfo").then(res => {
+      //   let data = res.data;
+      //   // 判断状态码
+      //   if (data.code === 0) {
+      //     console.log("服务器返回的值", data.data);
+      //     // 将用户信息保存到data中
+      //     this.userInfo = data.data;
+      //   } else {
+      //     this.$message.error({
+      //       message: data.msg,
+      //       duration: 1000
+      //     });
+      //   }
+      // });
+      this.$api.users.userInfo().then(res => {
+        this.userInfo = res;
+      });
+    },
+    test() {
+      this.$api.get("users/collJob").then(res => {
+        console.log(res.data);
       });
     }
   }

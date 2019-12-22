@@ -56,7 +56,6 @@
           <!-- 自定义表头样式 -->
           <el-table
             :data="jobs"
-            v-loading="isLoading"
             :header-cell-style="{background:'#f5f5f5',color:'#616466',fontSize:'18px'}"
           >
             <!-- 表头设置 -->
@@ -77,7 +76,7 @@
                 <span
                   :class="scope.row.isColl?'el-icon-star-on':'el-icon-star-off'"
                   style="cursor: pointer;"
-                  @click="showScope(scope)"
+                  @click="jobColl(scope.row)"
                 ></span>
               </template>
             </el-table-column>
@@ -126,9 +125,7 @@ export default {
       keywords: {
         type: 0,
         city: 0
-      },
-      // 表格加载状态
-      isLoading: false
+      }
     };
   },
   //页面渲染完毕调用接口
@@ -148,13 +145,10 @@ export default {
   methods: {
     getTypeList() {
       //获取类别列表
-      // this.$api.get("job/typeList").then(res => {
-      //   // console.log(res.data.data)
-      //   // 改变typelist
-      //   this.typeList = res.data.data;
-      // });
-      this.$api.job.jobType().then(res => {
-        this.typeList = res;
+      this.$api.get("job/typeList").then(res => {
+        // console.log(res.data.data)
+        // 改变typelist
+        this.typeList = res.data.data;
       });
     },
     // 获取职位列表
@@ -178,47 +172,31 @@ export default {
       if (this.query) {
         params.jobName = this.query;
       }
-      // 在发送请求之前 将表格设为加载状态
-      this.isLoading = true;
+
       // axios的get传参
-      // this.$api
-      //   .get("job/lists", {
-      //     params
-      //   })
-      //   .then(res => {
-      //     this.isLoading = false;
-      //     let {
-      //       data: { items, total, page }
-      //     } = res.data;
-      //     // console.log(items);
-      //     // console.log(total);
-      //     // console.log(page);
-      //     this.jobs = items;
-      //     //定制分页器
-      //     this.pagination = {
-      //       page,
-      //       total
-      //     };
-      //     // 请求完成 将表格加载状态取消
-      //     // 网速太快 做延时器
-      //   });
-      this.$api.job.jobList(params).then(res => {
-        this.isLoading = false;
-        let { items, total, page } = res;
-        this.jobs = items;
-        //定制分页器
-        this.pagination = {
-          page,
-          total
-        };
-        // 请求完成 将表格加载状态取消
-        // 网速太快 做延时器
-      });
+      this.$api
+        .get("job/lists", {
+          params
+        })
+        .then(res => {
+          let {
+            data: { items, total, page }
+          } = res.data;
+          // console.log(items);
+          // console.log(total);
+          // console.log(page);
+          this.jobs = items;
+          //定制分页器
+          this.pagination = {
+            page,
+            total
+          };
+        });
     },
     //页面改变的方法
     pageChange(index) {
       //当前页码
-      // console.log(index);
+      console.log(index);
       //页码改变 重新修改分页器
       this.pagination.page = index;
       //重新查询
@@ -243,25 +221,14 @@ export default {
       this.query = value;
       this.fetchJobs();
     },
-    showScope(scope) {
-      console.log(scope);
-      // 收藏 与 取消收藏
-      // this.$api.post("job/coll", { id: scope.row.pk }).then(res => {
-      //   if (res.data.code === 0) {
-      //     this.$message.success({ message: res.data.msg });
-      //     // 验证请求成功 对当前行进行操作
-      //     scope.row.isColl = !scope.row.isColl;
-      //   } else {
-      //     this.$message.error({ message: res.data.msg });
-      //   }
-      // });
-      // this.$api.get("job/info",{params:{id:scope.row.pk}}).then(res=>{
-      //   console.log(res)
-      // })
-      this.$api.job.jobColl({ id: scope.row.pk }).then(res => {
-        this.$message.success("请求成功");
-        // 验证请求成功 对当前行进行操作
-        scope.row.isColl = !scope.row.isColl;
+    // 收藏与取消收藏
+    jobColl(row) {
+      console.log(row);
+      this.$api.post("job/coll", { pk: row.pk }).then(res => {
+        console.log(res.data.code);
+        if (res.data.code === 0) {
+          row.isColl = !row.isColl;
+        }
       });
     }
   }

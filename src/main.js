@@ -9,12 +9,16 @@ import 'element-ui/lib/theme-chalk/index.css'
 // 引入elementui的组件库
 import elementUi from 'element-ui';
 // 导入axios 
-import Axios from 'axios';
+import api from '@/api';
 
 // 配置axios默认请求地址
-Axios.defaults.baseURL = 'http://172.16.8.20:3000/'
+// Axios.defaults.baseURL = 'http://172.16.8.206:3000/'
+// Axios.defaults.baseURL = 'http://localhost:3000/'
 // 配置axios每次发送请求都携带sessionID值
-Axios.defaults.withCredentials = true
+// Axios.defaults.withCredentials = true
+// Axios.defaults.headers.post['Accept'] = 'application/json'
+// Axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'
+
 // vue.use 方法代表 设置vue的全局组件  以便于每次使用对应的组件不需要第二次引入
 // 把elementui的组件  引入到vue中 使其变成全局组件
 Vue.use(elementUi);
@@ -22,7 +26,8 @@ Vue.use(elementUi);
 
 Vue.config.productionTip = false
 // 将axios 挂载到vue实例的属性上
-Vue.prototype.$api = Axios;
+Vue.$api = Vue.prototype.$api = api;
+// Vue.prototype.$api = Axios;
 
 new Vue({
   router, // 将router路由的配置注册到vue实例

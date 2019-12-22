@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       val1: "",
-      val2: "",
+      val2: ""
     };
   },
   methods: {
@@ -53,31 +53,47 @@ export default {
       // axios
       // 配置axios默认请求地址
       // post传递参数
-      this.$api
-        .post("users/login", { userName: this.val1, password: this.val2 })
+      // this.$api
+      //   .post("users/login", { userName: this.val1, password: this.val2 })
+      //   .then(res => {
+      //     // 取出请求返回的值
+      //     var data = res.data;
+      //     // 判断服务器返回的code码  只要为0 代表请求成功
+      //     if (data.code === 0) {
+      //       console.log("服务器返回的值", data.data);
+      //       this.$notify({
+      //         title: "登录成功",
+      //         message: "正在进入主页",
+      //         type: "success",
+      //         duration: 2000, //  显示时间
+      //         onClose: () => { // 窗口关闭的回调函数
+      //           // 等2s跳转页面
+      //           // 登录成功跳转首页
+      //           this.$router.push("/");
+      //         }
+      //       });
+      //     } else {
+      //       this.$message.error({
+      //         message: data.msg,
+      //         duration: 1000
+      //       });
+      //     }
+      //   });
+      this.$api.users
+        .login({ userName: this.val1, password: this.val2 })
         .then(res => {
-          // 取出请求返回的值
-          var data = res.data;
-          // 判断服务器返回的code码  只要为0 代表请求成功
-          if (data.code === 0) {
-            console.log("服务器返回的值", data.data);
-            this.$notify({
-              title: "登录成功",
-              message: "正在进入主页",
-              type: "success",
-              duration: 2000, //  显示时间
-              onClose: () => { // 窗口关闭的回调函数
-                // 等2s跳转页面
-                // 登录成功跳转首页
-                this.$router.push("/");
-              }
-            });
-          } else {
-            this.$message.error({
-              message: data.msg,
-              duration: 1000
-            });
-          }
+          this.$notify({
+            title: "登录成功",
+            message: "正在进入主页",
+            type: "success",
+            duration: 2000, //  显示时间
+            onClose: () => {
+              // 窗口关闭的回调函数
+              // 等2s跳转页面
+              // 登录成功跳转首页
+              this.$router.push("/");
+            }
+          });
         });
     },
     // 跳转reg页面的方法
