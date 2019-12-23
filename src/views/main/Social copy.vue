@@ -55,9 +55,7 @@
         <div class="result">
           <!-- 自定义表头样式 -->
           <el-table
-            :loading="isloading"
             :data="jobs"
-            v-loading="isLoading"
             :header-cell-style="{background:'#f5f5f5',color:'#616466',fontSize:'18px'}"
           >
             <!-- 表头设置 -->
@@ -76,16 +74,15 @@
               <!-- scope 指向当前这一行的数据 -->
               <template slot-scope="scope">
                 <span
-                  @click="showScope(scope)"
                   :class="scope.row.isColl?'el-icon-star-on':'el-icon-star-off'"
                   style="cursor: pointer;"
+                  @click="jobColl(scope.row)"
                 ></span>
               </template>
             </el-table-column>
             <el-table-column label="操作">
-              <!-- 插槽 有一个插槽作用域属性 里面保存着当前这一列的所有数据 -->
-              <template slot-scope="scope">
-                <span style="cursor: pointer;color:#707473;" @click="goInfo(scope.row.pk)">查看详情 ></span>
+              <template>
+                <span style="cursor: pointer;color:#707473;">查看详情 ></span>
               </template>
             </el-table-column>
           </el-table>
@@ -128,8 +125,7 @@ export default {
       keywords: {
         type: 0,
         city: 0
-      },
-      isloading: false
+      }
     };
   },
   //页面渲染完毕调用接口
@@ -149,10 +145,10 @@ export default {
   methods: {
     getTypeList() {
       //获取类别列表
-      this.$api.job.jobType().then(res => {
+      this.$api.get("job/typeList").then(res => {
         // console.log(res.data.data)
         // 改变typelist
-        this.typeList = res;
+        this.typeList = res.data.data;
       });
     },
     // 获取职位列表
@@ -176,26 +172,31 @@ export default {
       if (this.query) {
         params.jobName = this.query;
       }
-      this.isloading = true;
+
       // axios的get传参
-      this.$api.job.getJobList(params).then(res => {
-        this.isloading = false;
-        let { items, total, page } = res;
-        // console.log(items);
-        // console.log(total);
-        // console.log(page);
-        this.jobs = items;
-        //定制分页器
-        this.pagination = {
-          page,
-          total
-        };
-      });
+      this.$api
+        .get("job/lists", {
+          params
+        })
+        .then(res => {
+          let {
+            data: { items, total, page }
+          } = res.data;
+          // console.log(items);
+          // console.log(total);
+          // console.log(page);
+          this.jobs = items;
+          //定制分页器
+          this.pagination = {
+            page,
+            total
+          };
+        });
     },
     //页面改变的方法
     pageChange(index) {
       //当前页码
-      // console.log(index);
+      console.log(index);
       //页码改变 重新修改分页器
       this.pagination.page = index;
       //重新查询
@@ -208,46 +209,27 @@ export default {
     },
     serachJobs(id) {
       this.keywords.type = id;
-      // 每次进行查询page归1
-      this.pagination.page = 1;
       this.fetchJobs();
     },
     serachCitys(id) {
       this.keywords.city = id;
-      // 每次进行查询page归1
-      this.pagination.page = 1;
       this.fetchJobs();
     },
     // 输入框回车或者失焦事件
     serachList(value) {
       // 重新查询
       this.query = value;
-      // 每次进行查询page归1
-      this.pagination.page = 1;
       this.fetchJobs();
     },
-    showScope(scope) {
-      this.$api.job
-        .jobColl({
-          id: scope.row.pk
-        })
-        .then(res => {
-          this.$message.info({
-            message: "请求成功"
-          });
-          // 请求成功
-          scope.row.isColl = !scope.row.isColl;
-        });
-    },
-    goInfo(pk) {
-      // console.log(pk);
-      // 路由的跳转 www.baidu.com/abc?a=123
-      // params 参数  隐藏的参数
-      // path  地址
-      // query 地址栏参数 对象
-      // name 路由的别名
-      // 如果需要使用params传递参数 path就不能使用 必须使用name跳转路由
-      this.$router.push({ name: "position", params: { id: "akun" + pk } });
+    // 收藏与取消收藏
+    jobColl(row) {
+      console.log(row);
+      this.$api.post("job/coll", { pk: row.pk }).then(res => {
+        console.log(res.data.code);
+        if (res.data.code === 0) {
+          row.isColl = !row.isColl;
+        }
+      });
     }
   }
 };
