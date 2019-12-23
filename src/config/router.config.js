@@ -14,6 +14,12 @@ const routes = [{
         path: '/social',
         name: 'social',
         component: () => import('@/views/main/Social')
+      },
+      {
+        // 动态路由
+        path: '/position/:id',
+        name: 'position',
+        component: () => import('@/views/main/Position') //用来映射该页面需要显示的内容
       }
     ]
   },
