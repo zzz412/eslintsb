@@ -23,7 +23,9 @@
         <el-dropdown v-else>
           <span style="cursor: pointer;">欢迎您, {{userName}}</span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="test">个人中心</el-dropdown-item>
+            <el-dropdown-item>
+              <router-link to="/user">个人中心</router-link>  
+            </el-dropdown-item>
             <el-dropdown-item>个人空间</el-dropdown-item>
             <el-dropdown-item>退出登录</el-dropdown-item>
           </el-dropdown-menu>

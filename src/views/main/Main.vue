@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="title">
-      <p>未 来 无 所 不 能</p>
+      <p>未 来 无 所 不 能{{$store.state.count}}</p>
       <p>THE FUTURE OF POSSIBLE</p>
     </div>
   </div>
