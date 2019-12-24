@@ -31,6 +31,10 @@ export default new Vuex.Store({
       }
       return 'tp还要加油哦'
     },
+    sum: (state, getters) => (a, b, c) => {
+      console.log(a, b, c)
+      return state.count + getters.jsTp;
+    }
   },
   mutations: { //专注于改变state的值  vuex 要求我们改变state的值 必须使用mutations进行改变 
     changeCount(state, obj) { // state （state中的值） 调用传递的参数  参数只能传递一个 所有一般直接传递一个对象
@@ -42,6 +46,29 @@ export default new Vuex.Store({
 
 
   },
-  actions: {},
+  actions: { // 用于接收vuex的调用 触发Mutations
+    // 整个store对象   调用方法是传递的参数(有且只有一个)
+    getUserInfo({
+      commit,
+      dispatch
+    }, obj) { // 推荐第一个参数 使用解构赋值进行定义
+      // vuex对象的属性
+      /**
+       * {
+       *  state ： state的对象 
+       *  getters ； getters对象
+       *  commit: 用来调用mutations的全部方法
+       *  dispatch: 用来调用actions的全部方法
+       * }
+       */
+      console.log(obj)
+      // commit('changeCount', obj);
+      // dispatch('akunnb')
+      return Vue.$api.users.userInfo()
+    },
+    akunnb() {
+      console.log(11)
+    }
+  },
   modules: {}
 })

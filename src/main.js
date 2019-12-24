@@ -18,7 +18,7 @@ Vue.use(elementUi);
 
 Vue.config.productionTip = false
 // 将api 挂载到vue实例的属性上
-Vue.prototype.$api = api;
+Vue.$api = Vue.prototype.$api = api;
 
 new Vue({
   router, // 将router路由的配置注册到vue实例
