@@ -20,6 +20,11 @@ const routes = [{
         path: '/position/:id',
         name: 'position',
         component: () => import('@/views/main/Position') //用来映射该页面需要显示的内容
+      },
+      {
+        path: '/user',
+        name: 'user',
+        component: () => import('@/views/user/User.vue')
       }
     ]
   },

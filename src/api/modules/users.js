@@ -19,7 +19,18 @@ const users = [
         name: 'userInfo',
         // 定义方法的作用
         title: '获取用户信息'
+    },
+    {
+        // 定义请求地址
+        url: 'users/updateTmb',
+        // 定义请求方式
+        method: 'post',
+        // 定义请求的方法名
+        name: 'updateUser',
+        // 定义方法的作用
+        title: '修改用户头像'
     }
+    // images/1577114533914-img2.jpg
 ]
 
 // 默认导出users

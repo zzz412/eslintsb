@@ -57,7 +57,6 @@
           <el-table
             :loading="isloading"
             :data="jobs"
-            v-loading="isLoading"
             :header-cell-style="{background:'#f5f5f5',color:'#616466',fontSize:'18px'}"
           >
             <!-- 表头设置 -->
@@ -248,6 +247,11 @@ export default {
       // name 路由的别名
       // 如果需要使用params传递参数 path就不能使用 必须使用name跳转路由
       this.$router.push({ name: "position", params: { id: "akun" + pk } });
+      // this.$api.users
+      //   .updateUser({ thumbnail: "images/1577114533914-img2.jpg" })
+      //   .then(res => {
+      //     console.log(res);
+      //   });
     }
   }
 };

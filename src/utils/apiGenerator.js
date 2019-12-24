@@ -1,5 +1,7 @@
 // 导入axios 
 import Axios from 'axios';
+// 导入nodeJS模块 qs
+import qs from 'qs';
 // 导入element ui
 import {
     Message
@@ -111,7 +113,8 @@ class ApiGenerator { // es6的语法
             },
             post(opt) {
                 // 定义post需要的参数
-                let data = opt.params || {}; //如果没有post请求没有参数就用空对象
+                // qs.stringify 将对象转成url参数字符串
+                let data = qs.stringify(opt.params) || {}; //如果没有post请求没有参数就用空对象
                 return Axios({
                     method: 'post', //请求方式
                     url: opt.url, //请求地址
@@ -120,7 +123,6 @@ class ApiGenerator { // es6的语法
             }
         }
     }
-
 
 }
 

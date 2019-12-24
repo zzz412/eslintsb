@@ -124,6 +124,11 @@ export default {
 <style lang="scss" scoped>
 .main {
   background-color: rgb(247, 248, 249);
+  min-height: 100%;
+  box-sizing: border-box;
+  padding-top: 60px;
+  margin-bottom: -50px;
+  padding-bottom: 50px;
   .z-container {
     padding-top: 100px;
     min-height: 100%;
