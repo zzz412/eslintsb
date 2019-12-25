@@ -24,10 +24,16 @@
           <span style="cursor: pointer;">欢迎您, {{userName}}</span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>
-              <router-link to="/user">个人中心</router-link>  
+              <router-link to="/user">个人中心</router-link>
             </el-dropdown-item>
             <el-dropdown-item>个人空间</el-dropdown-item>
-            <el-dropdown-item>退出登录</el-dropdown-item>
+            <!-- 在组件外层定义的事件 是捕获不到的 -->
+            <!-- 第二种解决方案 使用事件修饰符 .native 直接绑定到根元素上 -->
+            <el-dropdown-item @click.native="logout">
+              退出登录
+              <!-- 第一种解决方案  直接在需要点击的元素外加上一层元素进行包裹 -->
+              <!-- <div @click="logout">退出登录</div> -->
+            </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -36,11 +42,12 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "Header",
   data() {
     return {
-      userInfo: {}
+      // userInfo: {}
     };
   },
   // 生命周期函数
@@ -49,6 +56,10 @@ export default {
   },
   // 计算属性
   computed: {
+    // userInfo() {
+    //   return this.$store.state.userInfo;
+    // },
+    ...mapState(["userInfo"]),
     userName() {
       // 计算用户的用户名
       // 判断用户是否为空
@@ -72,9 +83,28 @@ export default {
       //   // 将用户信息保存到data中
       //   this.userInfo = res;
       // });
-      this.$api.users.userInfo().then(res => {
-        this.userInfo = res;
+      // this.$api.users.userInfo().then(res => {
+      //   this.userInfo = res;
+      //   // 使用commit提交用户信息
+      //   this.$store.commit("saveUserInfo", res);
+      //   // this.$store.commit({ type: "saveUserInfo", obj: res });
+      // });
+      this.$store.dispatch("getUserInfo");
+    },
+    logout() {
+      this.$confirm("你确定要退出登录吗？", "是否退出?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$store.dispatch("logout").then(() => {
+          this.$message({
+            type: "success",
+            message: "退出成功!"
+          });
+        });
       });
+      // this.$store.dispatch("logout");
     }
   }
 };

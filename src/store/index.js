@@ -5,9 +5,11 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: { // state 等于 vue实例中的 data属性 数据改变是响应式的  数据是共享的
+    // 要使用就必须得提前定义 
     count: 10, //这是一个计数器
     akun: '18',
-    tp: '10'
+    tp: '10',
+    userInfo: {}, //用来存储用户信息
   },
   getters: { // getters 相当于计算属性一样 建议getters中用箭头函数  
     // 当getters 使用传递的参数之后 就会变成一个方法 相当于methods 使用的时候需要加（）
@@ -43,8 +45,11 @@ export default new Vuex.Store({
       state.count++;
       // }, 2000);
     },
-
-
+    // 保存用户信息
+    saveUserInfo(state, obj) {
+      // 直接保存用户信息
+      state.userInfo = obj;
+    },
   },
   actions: { // 用于接收vuex的调用 触发Mutations
     // 整个store对象   调用方法是传递的参数(有且只有一个)
@@ -61,10 +66,24 @@ export default new Vuex.Store({
        *  dispatch: 用来调用actions的全部方法
        * }
        */
-      console.log(obj)
+      // console.log(obj)
       // commit('changeCount', obj);
       // dispatch('akunnb')
-      return Vue.$api.users.userInfo()
+      // return Vue.$api.users.userInfo()
+      // 异步函数处理 请求用户信息 提交给mutations 保存用户信息
+      Vue.$api.users.userInfo().then(res => {
+        commit('saveUserInfo', res);
+      })
+    },
+    // 退出登录
+    logout({
+      commit
+    }) {
+      // 将异步的promise函数返回 
+      return Vue.$api.users.logout().then(() => {
+        // 清空userInfo
+        commit('saveUserInfo', {});
+      })
     },
     akunnb() {
       console.log(11)

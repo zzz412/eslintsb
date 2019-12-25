@@ -29,6 +29,16 @@ const users = [
         name: 'updateUser',
         // 定义方法的作用
         title: '修改用户头像'
+    },
+    {
+        // 定义请求地址
+        url: 'users/loginOut',
+        // 定义请求方式
+        method: 'post',
+        // 定义请求的方法名
+        name: 'logout',
+        // 定义方法的作用
+        title: '退出登录'
     }
     // images/1577114533914-img2.jpg
 ]

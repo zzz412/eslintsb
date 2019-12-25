@@ -3,7 +3,6 @@
     <el-form label-width="80px">
       <el-form-item>
         <h2>注册</h2>
-        <h2 @click="changes">{{$store.getters.sum(1,2,3)}} {{sum(1,2,3)}} {{sum2(1,2,3)}}</h2>
       </el-form-item>
       <el-form-item label="用户名">
         <el-input type="text" placeholder="请输入用户名" v-model="val1" />
@@ -16,7 +15,7 @@
       </el-form-item>
       <el-form-item>
         <div style="text-align:center;">
-          <el-button type="text" @click="goLogin">返回登录{{count}}</el-button>
+          <el-button type="text" @click="goLogin">返回登录</el-button>
         </div>
       </el-form-item>
     </el-form>

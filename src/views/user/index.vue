@@ -104,6 +104,7 @@ export default {
       .left,
       .right {
         height: 600px;
+        overflow: hidden;
       }
       .left {
         & > div {

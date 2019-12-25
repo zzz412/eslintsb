@@ -5,15 +5,18 @@
         <div class="left">
           <div class="left_top">
             <div class="img_top">
-              <img src="https://we2.djicdn.com/hire/public/img/default-avatar.6d24ca6.png" alt />
+              <el-avatar
+                :size="80"
+                :src="userInfo.thumbnail?BASE_URL+userInfo.thumbnail:'https://we2.djicdn.com/hire/public/img/default-avatar.6d24ca6.png'"
+              />
             </div>
             <div>
-              <el-tooltip class="item" effect="dark" content="tp" placement="top">
-                <span>tp</span>
+              <el-tooltip class="item" effect="dark" :content="userInfo.username" placement="top">
+                <span>{{userInfo.username}}</span>
               </el-tooltip>
             </div>
 
-            <div>编辑头像</div>
+            <div @click="showDalog">编辑头像</div>
             <div>
               <img src="https://we2.djicdn.com/hire/public/img/hire-qrcode.405a3e5.jpg" alt />
             </div>
@@ -67,19 +70,92 @@
         </div>
       </div>
     </div>
+    <!-- 修改头像的弹框 -->
+    <el-dialog title="编辑头像" :visible.sync="dialogVisible" :before-close="beforeClose">
+      <div class="dialog">
+        <el-upload
+          class="avatar-uploader"
+          :action="BASE_URL+'fileRecv'"
+          name="headPortraitUrl"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img v-if="imageUrl" :src="BASE_URL+imageUrl" class="avatar" />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <div style="color:red;font-size:16px;">
+          <p>仅支持png,jpg,jpeg格式图片且不大于2MB</p>
+          <p>建议图片尺寸为200px*200px</p>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updateUser">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { BASE_URL } from "@/config/gateway";
 export default {
   data() {
     return {
-      activeIndex: "1"
+      BASE_URL,
+      activeIndex: "1",
+      dialogVisible: false,
+      imageUrl: ""
     };
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.userInfo;
+    }
   },
   methods: {
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
+    },
+    beforeClose() {
+      console.log("弹窗正在关闭");
+      this.dialogVisible = false;
+    },
+    handleAvatarSuccess(res, file) {
+      console.log(res, file);
+      // url.createObjectURL 是h5 将文件格式转成一个http格式 的方法
+      // this.imageUrl = URL.createObjectURL(file.raw);
+      this.imageUrl = res.data.path;
+    },
+    beforeAvatarUpload(file) {
+      // 获取文件是否为 jpg||png格式
+      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
+      // 获取文件大小    1024b => 1kb   1024kb => 1mb
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG或PNG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      // 返回ture 代表 能够上传 false则反
+      return isJPG && isLt2M;
+    },
+    showDalog() {
+      // 把用户图像 显示在上传图片中
+      this.imageUrl = this.userInfo.thumbnail;
+      // 显示弹框
+      this.dialogVisible = true;
+    },
+    // 修改用户头像
+    updateUser() {
+      this.$api.users.updateUser({ thumbnail: this.imageUrl }).then(res => {
+        this.$message.success("修改成功");
+        // 重新拉取用户信息
+        this.$store.dispatch("getUserInfo");
+        this.dialogVisible = false;
+      });
     }
   }
 };
@@ -259,5 +335,36 @@ export default {
       }
     }
   }
+}
+// 使用 多重选择器 进行选择样式
+</style>
+
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+.dialog {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

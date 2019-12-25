@@ -2,12 +2,7 @@
   <div id="login">
     <el-form label-width="80px">
       <el-form-item>
-        <h2>登录{{count}} {{akun}} {{myakun}} {{myakun2}}</h2>
-        <h2>
-          {{xAkun(19)}}
-          {{jsAkun(10)}}
-          {{tpxx(19)}}
-        </h2>
+        <h2>登录</h2>
       </el-form-item>
       <el-form-item label="用户名">
         <el-input type="text" placeholder="请输入用户名或手机号" v-model="val1" />
@@ -84,7 +79,7 @@ export default {
       // this.$store.commit("changeCount", { a: 123, b: 345 });
       //2. type 通知的事件名
       // this.$store.commit({ type: "changeCount", a: 123, b: 345 });
-      this.akunChang({ type: "changeCount", a: 123, b: 345 });
+      // this.akunChang({ type: "changeCount", a: 123, b: 345 });
       // this.$store.state.count++;
       // this.$router.push("/");
       // 先判断文本框是否有内容
